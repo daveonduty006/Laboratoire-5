@@ -213,7 +213,7 @@ def auto_repair_shop():
 
     class Facturation:
         
-        def __init__(self, shop_db):
+        def __init__(self, shop_db, avg_payrate):
             self.shop_db = shop_db
 
     def create_dict(car_list, rep_list):
