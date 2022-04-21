@@ -3,48 +3,6 @@ Laboratoire 5:
 Vous devez implémenter un système de facturation pour un garage automobile. Le système 
 de facturation doit avoir la liste des véhicules et les réparations à faire.
 
-classe car
-    attributs
-        maker
-        model
-        year
-        color
-    méthodes
-        get_maker
-        get_model
-        get_year
-        get_color
-
-classe reparation(car)
-    attributs
-        job_name
-        job_cost
-        job_length
-        job_state
-    méthodes
-        get_job_name
-        get_job_cost
-        get_job_length
-        get_job_state
-
-classe facturation(reparation)
-    méthodes
-        add_job
-        remove_job
-        get_done_jobs_length
-        get_done_jobs_cost
-        get_pay_rate
-        get_unfinished_jobs_length
-        get_unfinished_jobs_cost
-
-emp_menu():
-    ajouter ou enlever une réparation(en incluant les véhicules associés)
-    voir la liste de réparations(en incluant les véhicules associés)
-    voir le nombre total d'heures de réparations faites
-    voir le revenu total de réparation faites
-    voir le nombre d'heures total de réparations non-faites
-    voir le revenu total manqué des réparations non-faites.    
-
 Étape 1:
 Créer le constructeur de la classe automobile. Votre automobile doit avoir les 
 informations suivantes: Modèle, marque, année et couleur.
@@ -134,20 +92,28 @@ emp_menu():
 def auto_repair_shop():
 
     def execution():
-        Car.instantiate_from_car_db()
-        Reparation.instantiate_from_rep_db()
-        shop_db = create_dict(Car.car_list, Reparation.rep_list)
-        menu(shop_db)                
+        Car.instantiate_from_shop_db()
+        Reparation.instantiate_from_shop_db()
+        print(Reparation.rep_list)
+        #shop_db = create_dict(Car.car_list, Reparation.rep_list)             
 
     class Car:
         car_list = []
 
-        def __init__(self, maker, model, year, color):
+        def __init__(self, plate, maker, model, year, color):
+            self.plate = plate
             self.maker = maker
             self.model = model
             self.year = year
             self.color = color
-            Car.car_list.append(str(self))      
+            Car.car_list.append(self.get_plate())
+            Car.car_list.append(self.get_maker())            
+            Car.car_list.append(self.get_model())
+            Car.car_list.append(self.get_year())
+            Car.car_list.append(self.get_color())
+
+        def get_plate(self):
+            return f"{self.plate}"                  
 
         def get_maker(self):
             return f"{self.maker}"
@@ -162,17 +128,14 @@ def auto_repair_shop():
             return f"{self.color}"
 
         @classmethod
-        def instantiate_from_car_db(cls):
-            with open("car_db.txt", "r", encoding="utf8") as f:
+        def instantiate_from_shop_db(cls):
+            with open("shop_db.txt", "r", encoding="utf8") as f:
                 lines = f.readlines()
             for line in lines:
-                data = line.replace("\n", "").split()
-                Car(data[0], data[1], data[2], data[3])           
+                data = line.replace("\n", "").split(",")
+                Car(data[0], data[1], data[2], data[3], data[4])           
 
-        def __str__(self):
-            return f"{self.maker} {self.model} {self.year} {self.color}"
-
-    class Reparation:
+    class Reparation(Car):
         rep_list = []
 
         def __init__(self, job_name, job_cost, job_length, job_state): 
@@ -180,12 +143,10 @@ def auto_repair_shop():
             self.job_cost = job_cost
             self.job_length = job_length
             self.job_state = job_state
-            job_data = []
-            job_data.append(self.get_job_name())
-            job_data.append(self.get_job_cost())
-            job_data.append(self.get_job_length())
-            job_data.append(self.get_job_state())
-            Reparation.rep_list.append(job_data)
+            Reparation.rep_list.append(self.get_job_name())
+            Reparation.rep_list.append(self.get_job_cost())
+            Reparation.rep_list.append(self.get_job_length())
+            Reparation.rep_list.append(self.get_job_state())
 
         def get_job_name(self):
             return f"{self.job_name}"
@@ -200,16 +161,14 @@ def auto_repair_shop():
             return f"{self.job_state}"
 
         @classmethod
-        def instantiate_from_rep_db(cls):
-            with open("rep_db.txt", "r", encoding="utf8") as f:
+        def instantiate_from_shop_db(cls):
+            with open("shop_db.txt", "r", encoding="utf8") as f:
                 lines = f.readlines()
             for line in lines:
-                data = line.replace("\n", "").split()
-                Reparation(data[0], data[1], data[2], data[3])   
-
-        def __str__(self):
-            return f"{self.job_name} {self.job_cost} {self.job_length} "\
-                   f"{self.job_state}"
+                line = line.replace("\n", "").split(",")
+            for i in range(5,len(lines),4):
+                if i != len(data):
+                    Car(line[i], line[i+1], line[i+2], data[i+3], data[i+4]) 
 
     class Facturation:
         
