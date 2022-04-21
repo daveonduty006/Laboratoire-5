@@ -1,5 +1,0 @@
-Freins 800 6 non-fait 
-BieletteAv-G 200 4 fait 
-Pare-Brise 1200 2 non-fait 
-Démarreur 800 5 non-fait 
-Inst.Pneus 80 1 fait 

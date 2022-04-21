@@ -1,5 +1,5 @@
-AAAAAA,Nissan,Altima,2012,Bleu,Freins,800,6,non-fait 
-BBBBBB,Ford,Taurus,2000,Vert,BieletteAv-G,200,4,fait 
-CCCCCC,Honda,Civic,2020,Noir,Pare-Brise,1200,2,non-fait 
-DDDDDD,Ford,Escape,2011,Gris,Démarreur,800,5,non-fait 
-EEEEEE,Toyota,Corolla,2002,Bleu,Inst.Pneus,80,1,fait 
+AAAAAA,Nissan,Altima,2012,Bleu,Freins,800,6,non-fait
+BBBBBB,Ford,Taurus,2000,Vert,BieletteAv-G,200,4,fait
+CCCCCC,Honda,Civic,2020,Noir,Pare-Brise,1200,2,non-fait
+DDDDDD,Ford,Escape,2011,Gris,Démarreur,800,5,non-fait
+EEEEEE,Toyota,Corolla,2002,Bleu,Inst.Pneus,80,1,fait

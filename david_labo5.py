@@ -1,3 +1,5 @@
+import copy 
+
 """
 Laboratoire 5:
 Vous devez implémenter un système de facturation pour un garage automobile. Le système 
@@ -94,8 +96,8 @@ def auto_repair_shop():
     def execution():
         Car.instantiate_from_shop_db()
         Reparation.instantiate_from_shop_db()
-        print(Reparation.rep_list)
-        #shop_db = create_dict(Car.car_list, Reparation.rep_list)             
+        shop_db = create_dict(Car.car_list, Reparation.rep_list)
+        menu(shop_db)             
 
     class Car:
         car_list = []
@@ -132,10 +134,10 @@ def auto_repair_shop():
             with open("shop_db.txt", "r", encoding="utf8") as f:
                 lines = f.readlines()
             for line in lines:
-                data = line.replace("\n", "").split(",")
+                data = line.replace("\n", "").split(",")        
                 Car(data[0], data[1], data[2], data[3], data[4])           
 
-    class Reparation(Car):
+    class Reparation:
         rep_list = []
 
         def __init__(self, job_name, job_cost, job_length, job_state): 
@@ -165,20 +167,33 @@ def auto_repair_shop():
             with open("shop_db.txt", "r", encoding="utf8") as f:
                 lines = f.readlines()
             for line in lines:
-                line = line.replace("\n", "").split(",")
-            for i in range(5,len(lines),4):
-                if i != len(data):
-                    Car(line[i], line[i+1], line[i+2], data[i+3], data[i+4]) 
+                line = line.split(",")
+                data = []
+                data.append(line[5:])
+                for i in range(0, len(data[0]), 4):
+                    Reparation(data[0][i], data[0][i+1], data[0][i+2], data[0][i+3])
 
     class Facturation:
         
         def __init__(self, shop_db, avg_payrate):
-            self.shop_db = shop_db
+            pass
 
     def create_dict(car_list, rep_list):
         job_db = {}
-        for i in range(0,4):
-            job_db[car_list[i]] = rep_list[i]
+        for plate in range(0, len(car_list), 5):
+            data = []
+            clean_data = copy.deepcopy(data)
+            for job_data in rep_list:
+                if "\n" in job_data:
+                    clean_data.append(job_data.replace("\n", ""))
+                    data.append(job_data)
+                    break
+                else:
+                    clean_data.append(job_data)
+                    data.append(job_data)
+            job_db[car_list[plate]] = clean_data
+            for old_data in data:
+                rep_list.remove(old_data)                      
         return job_db
 
     def menu(shop_db):
