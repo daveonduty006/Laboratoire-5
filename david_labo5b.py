@@ -1,5 +1,3 @@
-import copy 
-
 """
 Laboratoire 5:
 Vous devez implémenter un système de facturation pour un garage automobile. Le système 
@@ -91,101 +89,49 @@ emp_menu():
     voir le revenu total manqué des réparations non-faites.   
 """
 
-def auto_repair_shop():
+class Car:
 
-    def execution():
-        Car.instantiate_from_shop_db()
-        Reparation.instantiate_from_shop_db()
-        shop_db = create_dict(Car.car_list, Reparation.rep_list)
-        print(shop_db)
-        #menu(shop_db)             
+    def __init__(self, maker:str, model:str, year:int, color:str):
+        self.maker = maker
+        self.model = model
+        self.year = year
+        self.color = color
+ 
+    def __str__(self):
+        return f"{self.maker} {self.model} {self.year} {self.color}"
+           
+class Repair:
 
-    class Car:
-        car_list = []
+    def __init__(self, job_name, job_cost, job_length, job_state): 
+        self.job_name = job_name
+        self.job_cost = job_cost
+        self.job_length = job_length
+        self.job_state = job_state
 
-        def __init__(self, plate, maker, model, year, color):
-            self.plate = plate
-            self.maker = maker
-            self.model = model
-            self.year = year
-            self.color = color
-            Car.car_list.append(self.get_plate())
-            Car.car_list.append(self.get_maker())            
-            Car.car_list.append(self.get_model())
-            Car.car_list.append(self.get_year())
-            Car.car_list.append(self.get_color())
+    def __str__(self):
+        return f"{self.job_name} {self.job_cost} {self.job_length} {self.job_state}"
 
-        def get_plate(self):
-            return f"{self.plate}"                  
-
-        def get_maker(self):
-            return f"{self.maker}"
-
-        def get_model(self):
-            return f"{self.model}"
-
-        def get_year(self):
-            return f"{self.year}"
-
-        def get_color(self):
-            return f"{self.color}"
-
-        @classmethod
-        def instantiate_from_shop_db(cls):
-            with open("shop_db.txt", "r", encoding="utf8") as f:
-                lines = f.readlines()
-            for line in lines:
-                data = line.replace("\n", "").split(",")        
-                Car(data[0], data[1], data[2], data[3], data[4])           
-
-    class Reparation:
-        rep_list = []
-
-        def __init__(self, job_name, job_cost, job_length, job_state): 
-            self.job_name = job_name
-            self.job_cost = job_cost
-            self.job_length = job_length
-            self.job_state = job_state
-            Reparation.rep_list.append(self.get_job_name())
-            Reparation.rep_list.append(self.get_job_cost())
-            Reparation.rep_list.append(self.get_job_length())
-            Reparation.rep_list.append(self.get_job_state())
-
-        def get_job_name(self):
-            return f"{self.job_name}"
-
-        def get_job_cost(self):
-            return f"{self.job_cost}"
-
-        def get_job_length(self):
-            return f"{self.job_length}"
-
-        def get_job_state(self):
-            return f"{self.job_state}"
-
-        @classmethod
-        def instantiate_from_shop_db(cls):
-            with open("shop_db.txt", "r", encoding="utf8") as f:
-                lines = f.readlines()
-            for line in lines:
-                line = line.split(",")
-                data = []
-                data.append(line[5:])
-                for i in range(0, len(data[0]), 4):
-                    Reparation(data[0][i], data[0][i+1], data[0][i+2], data[0][i+3])
-
-    class Facturation:
+class Billing:
         
-        def __init__(self, shop_db, user_sel, avg_payrate=18):
-            self.shop_db = shop_db
-            self.user_sel = user_sel
-            self.avg_payrate = avg_payrate
+    def __init__(self, cars:list, jobs:list):
+        self.cars = cars
+        self.jobs = jobs
 
-    def menu(shop_db):
+    def add_job(self):
+        pass
+
+    def display(self):
+        i = 1
+        for car, job in zip(self.cars, self.jobs):
+            print(f"{i}. {car}: {job}")
+            i += 1
+            
+
+    def menu(self):
         exit = False
-        while exit:
-            user_sel = -1
-            while not 0 <= user_sel <= 7:
+        while not exit:
+            user_sel = 0
+            while not 1 <= user_sel <= 7:
                 print("Menu des options: ")
                 print("1. ajouter/enlever une réparation")
                 print("2. voir liste des réparations")
@@ -196,40 +142,37 @@ def auto_repair_shop():
                 print("7. terminer")
                 user_sel = int(input("Choix: "))
             if user_sel == 1:
-                Facturation(shop_db, user_sel)
+                op_sel = 0
+                while not 1 <= op_sel <= 2:
+                    print("1. Ajouter une réparation à un véhicule")
+                    print("2. Enlever une réparation à un véhicule")
+                    op_sel = int(input("Choix: "))
+                self.add_job(self.bills)
+                
 
-    def create_dict(car_list, rep_list):
-        job_db = {}
-        for plate in range(0, len(car_list), 5):
-            data = []
-            clean_data = copy.deepcopy(data)
-            for job_data in rep_list:
-                if "\n" in job_data:
-                    clean_data.append(job_data.replace("\n", ""))
-                    data.append(job_data)
-                    break
-                else:
-                    clean_data.append(job_data)
-                    data.append(job_data)
-            job_db[car_list[plate]] = clean_data
-            for old_data in data:
-                rep_list.remove(old_data)                  
-        return job_db
+
+cars = []
+cars.append(Car("Nissan","Altima",2012,"Bleu"))
+cars.append(Car("Ford","Taurus",2000,"Vert"))
+cars.append(Car("Honda","Civic",2020,"Noir"))
+cars.append(Car("Ford","Escape",2011,"Gris"))
+cars.append(Car("Toyota","Corolla",2002,"Bleu"))
+
+jobs = []
+jobs.append(Repair("Freins",800,6,"non-fait"))
+jobs.append(Repair("BieletteAv-G",200,4,"fait"))
+jobs.append(Repair("Pare-Brise",1200,2,"non-fait"))
+jobs.append(Repair("Démarreur",800,5,"non-fait"))
+jobs.append(Repair("Pneus",80,1,"fait"))
+
+bills = Billing(cars, jobs)
+bills.display()
 
 
         
 
-    execution()
 
 
-auto_repair_shop()
-
-
-
-
-
-       
-        
 
 
 """classe facturation(reparation)
