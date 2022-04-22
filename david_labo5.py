@@ -97,7 +97,8 @@ def auto_repair_shop():
         Car.instantiate_from_shop_db()
         Reparation.instantiate_from_shop_db()
         shop_db = create_dict(Car.car_list, Reparation.rep_list)
-        menu(shop_db)             
+        print(shop_db)
+        #menu(shop_db)             
 
     class Car:
         car_list = []
@@ -175,26 +176,10 @@ def auto_repair_shop():
 
     class Facturation:
         
-        def __init__(self, shop_db, avg_payrate):
-            pass
-
-    def create_dict(car_list, rep_list):
-        job_db = {}
-        for plate in range(0, len(car_list), 5):
-            data = []
-            clean_data = copy.deepcopy(data)
-            for job_data in rep_list:
-                if "\n" in job_data:
-                    clean_data.append(job_data.replace("\n", ""))
-                    data.append(job_data)
-                    break
-                else:
-                    clean_data.append(job_data)
-                    data.append(job_data)
-            job_db[car_list[plate]] = clean_data
-            for old_data in data:
-                rep_list.remove(old_data)                      
-        return job_db
+        def __init__(self, shop_db, user_sel, avg_payrate=18):
+            self.shop_db = shop_db
+            self.user_sel = user_sel
+            self.avg_payrate = avg_payrate
 
     def menu(shop_db):
         exit = False
@@ -212,6 +197,26 @@ def auto_repair_shop():
                 user_sel = int(input("Choix: "))
             if user_sel == 1:
                 Facturation(shop_db, user_sel)
+
+    def create_dict(car_list, rep_list):
+        job_db = {}
+        for plate in range(0, len(car_list), 5):
+            data = []
+            clean_data = copy.deepcopy(data)
+            for job_data in rep_list:
+                if "\n" in job_data:
+                    clean_data.append(job_data.replace("\n", ""))
+                    data.append(job_data)
+                    break
+                else:
+                    clean_data.append(job_data)
+                    data.append(job_data)
+            job_db[car_list[plate]] = clean_data
+            for old_data in data:
+                rep_list.remove(old_data)                  
+        return job_db
+
+
         
 
     execution()
