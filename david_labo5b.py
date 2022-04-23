@@ -11,11 +11,14 @@ class Car:
            
 class Repair:
 
+    job_data = []
+
     def __init__(self, job_name:str, job_cost:float, job_length:float, job_state:str): 
         self.job_name = job_name
         self.job_cost = job_cost
         self.job_length = job_length
         self.job_state = job_state
+        Repair.job_data.append([job_cost,job_length,job_state])
 
     def __str__(self):
         return f"{self.job_name} {self.job_cost}$ {self.job_length}h {self.job_state}"
@@ -37,79 +40,135 @@ class Billing:
         job_cost = float(input("Entrez le coût: ").replace("$",""))
         job_length = float(input("Entrez la durée en heure: ").replace("h","").replace("heure", ""))
         job_state = input("Entrez l'état actuel (fait, non-fait): ")
-        cars.append(Car(car_maker, car_model, car_year, car_color))
-        jobs.append(Repair(job_name, job_cost, job_length, job_state))
+        self.cars.append(Car(car_maker, car_model, car_year, car_color))
+        self.jobs.append(Repair(job_name, job_cost, job_length, job_state))
 
     def remove_job(self):
         self.display()
         index = int(input("Entrez l'index: "))
-        self.cars.pop(index-1)
-        self.jobs.pop(index-1)
+        return index-1
 
-    def done_job_hours(self):
+    def show_hourly_income(self):
         print()
-        data = []
-        for job in self.jobs:
-            data.append(job)
-        print(data)
+        income = 0
+        for i in range(0,len(Repair.job_data),3):
+            if Repair.job_data[i-1] == "fait":
+                job_value = Repair.job_data[i-3]/Repair.job_data[i-2]
+                income += job_value
+        print(f"{income:.2f}$")
+
+    def show_done_job_hours(self):
+        print()
+        hours = 0
+        for i in range(0,len(Repair.job_data),3):
+            if Repair.job_data[i-1] == "fait":
+                hours += Repair.job_data[i-2]
+        print(f"{hours}h")
+
+    def show_total_income(self):
+        print()
+        income = 0
+        for i in range(0,len(Repair.job_data),3):
+            if Repair.job_data[i-1] == "fait":
+                income += Repair.job_data[i-3]
+        print(f"{income}$")
+
+    def show_pending_job_hours(self):
+        print()
+        hours = 0
+        for i in range(0,len(Repair.job_data),3):
+            if Repair.job_data[i-1] == "non-fait":
+                hours += Repair.job_data[i-2]
+        print(f"{hours}h")
+
+    def show_missed_total_income(self):
+        print()
+        income = 0
+        for i in range(0,len(Repair.job_data),3):
+            if Repair.job_data[i-1] == "non-fait":
+                income += Repair.job_data[i-3]
+        print(f"{income}$")        
 
     def display(self):
         print()
         i = 1
         for car, job in zip(self.cars, self.jobs):
             print(f"{i}. {car}: {job}")
-            i += 1           
+            i += 1   
 
     def menu(self):
+        print(Repair.job_data)
+        reboot = -1
         exit = False
         while not exit:
             user_sel = 0
-            while not 1 <= user_sel <= 7:
+            while not 1 <= user_sel <= 8:
                 print()
                 print("Menu des options: ")
                 print("1. Ajouter/Enlever une Réparation")
                 print("2. Voir Liste des Réparations")
-                print("3. Voir Total des Heures de Réparations Faites")
-                print("4. voir revenu total de réparations faites")
-                print("5. voir total des heures de réparations non-faites")
-                print("6. voir revenu total manqué de réparations non-faites.")
-                print("7. terminer")
+                print("3. Voir Revenu Horaire Moyen")
+                print("4. Voir Total des Heures de Réparations Faites")
+                print("5. Voir Revenu Total des Réparations Faites")
+                print("6. Voir Total des Heures de Réparations Non-Faites")
+                print("7. Voir Revenu Total Manqué des Réparations Non-Faites.")
+                print("8. Terminer")
                 user_sel = int(input("Choix: "))
             if user_sel == 1:
                 op_sel = 0
                 while not 1 <= op_sel <= 2:
+                    print()
                     print("1. Ajouter une réparation à un véhicule")
                     print("2. Enlever une réparation à un véhicule")
                     op_sel = int(input("Choix: "))
                 if op_sel == 1:
                     self.add_job()
                 else: 
-                    self.remove_job()
+                    reboot = self.remove_job()
+                    return reboot
             elif user_sel == 2:
                 self.display()
             elif user_sel == 3:
-                self.done_job_hours()
+                self.show_hourly_income()
+            elif user_sel == 4:
+                self.show_done_job_hours()
+            elif user_sel == 5:
+                self.show_total_income()
+            elif user_sel == 6:
+                self.show_pending_job_hours()
+            elif user_sel == 7:
+                self.show_missed_total_income()
+            else:
+                break
+        return reboot
 
-            
-                
+def execution():
+    cars = []
+    cars.append(Car("Ford","Escape",2011,"Gris"))
+    cars.append(Car("Ford","Taurus",2000,"Vert"))
+    cars.append(Car("Honda","Civic",2020,"Noir"))
+    cars.append(Car("Nissan","Altima",2012,"Bleu"))
+    cars.append(Car("Toyota","Corolla",2002,"Bleu"))
+
+    jobs = []
+    jobs.append(Repair("Freins",800,6,"non-fait"))
+    jobs.append(Repair("BieletteAv-G",200,4,"fait"))
+    jobs.append(Repair("Pare-Brise",1200,2,"non-fait"))
+    jobs.append(Repair("Démarreur",800,5,"non-fait"))
+    jobs.append(Repair("Pneus",80,1,"fait"))
+
+    bills = Billing(cars, jobs)
+    reboot = bills.menu()
+    while reboot != -1:
+        cars.pop(reboot)
+        jobs.pop(reboot)
+        Repair.job_data.pop(reboot)
+        bills = Billing(cars, jobs)
+        reboot = bills.menu()        
+    print("\nBonne journée!")
 
 
-cars = []
-cars.append(Car("Ford","Escape",2011,"Gris"))
-cars.append(Car("Ford","Taurus",2000,"Vert"))
-cars.append(Car("Honda","Civic",2020,"Noir"))
-cars.append(Car("Nissan","Altima",2012,"Bleu"))
-cars.append(Car("Toyota","Corolla",2002,"Bleu"))
-
-jobs = []
-jobs.append(Repair("Freins",800,6,"non-fait"))
-jobs.append(Repair("BieletteAv-G",200,4,"fait"))
-jobs.append(Repair("Pare-Brise",1200,2,"non-fait"))
-jobs.append(Repair("Démarreur",800,5,"non-fait"))
-jobs.append(Repair("Pneus",80,1,"fait"))
-
-bills = Billing(cars, jobs)
-bills.menu()
+execution()
 
 
         
