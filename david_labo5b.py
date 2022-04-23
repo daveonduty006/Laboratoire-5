@@ -38,7 +38,7 @@ class Billing:
         car_color = input("Entrez la couleur: ")
         job_name = input("Entrez le nom de la réparation: ")
         job_cost = int(input("Entrez le coût: ").replace("$",""))
-        job_length = int(input("Entrez la durée en heure: ").replace("h","").replace("heure", ""))
+        job_length = int(input("Entrez la durée en heure: ").replace("h","")
         job_state = input("Entrez l'état actuel (fait, non-fait): ")
         self.cars.append(Car(car_maker, car_model, car_year, car_color))
         self.jobs.append(Repair(job_name, job_cost, job_length, job_state))
