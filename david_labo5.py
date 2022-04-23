@@ -38,7 +38,7 @@ class Billing:
         car_color = input("Entrez la couleur: ")
         job_name = input("Entrez le nom de la réparation: ")
         job_cost = int(input("Entrez le coût: ").replace("$",""))
-        job_length = int(input("Entrez la durée en heure: ").replace("h","")
+        job_length = int(input("Entrez la durée en heure: ").replace("h",""))
         job_state = input("Entrez l'état actuel (fait, non-fait): ")
         self.cars.append(Car(car_maker, car_model, car_year, car_color))
         self.jobs.append(Repair(job_name, job_cost, job_length, job_state))
@@ -53,11 +53,13 @@ class Billing:
     def show_hourly_income(self):
         print()
         income = 0
+        hours = 0
         for i in range(len(Repair.job_data)):
             if Repair.job_data[i][3] == "fait":
-                job_value = Repair.job_data[i][1]/Repair.job_data[i][2]
-                income += job_value
-        print(f"{income:.2f}$")
+                income += Repair.job_data[i][1]
+                hours += Repair.job_data[i][2]
+        hourly_income = income / hours
+        print(f"{hourly_income:.2f}$")
 
     def show_done_job_hours(self):
         print()
