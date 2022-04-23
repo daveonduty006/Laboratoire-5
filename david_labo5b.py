@@ -13,12 +13,12 @@ class Repair:
 
     job_data = []
 
-    def __init__(self, job_name:str, job_cost:float, job_length:float, job_state:str): 
+    def __init__(self, job_name:str, job_cost:int, job_length:int, job_state:str): 
         self.job_name = job_name
         self.job_cost = job_cost
         self.job_length = job_length
         self.job_state = job_state
-        Repair.job_data.append([job_cost,job_length,job_state])
+        Repair.job_data.append([job_name,job_cost,job_length,job_state])
 
     def __str__(self):
         return f"{self.job_name} {self.job_cost}$ {self.job_length}h {self.job_state}"
@@ -37,8 +37,8 @@ class Billing:
         car_year = int(input("Entrez l'année: "))
         car_color = input("Entrez la couleur: ")
         job_name = input("Entrez le nom de la réparation: ")
-        job_cost = float(input("Entrez le coût: ").replace("$",""))
-        job_length = float(input("Entrez la durée en heure: ").replace("h","").replace("heure", ""))
+        job_cost = int(input("Entrez le coût: ").replace("$",""))
+        job_length = int(input("Entrez la durée en heure: ").replace("h","").replace("heure", ""))
         job_state = input("Entrez l'état actuel (fait, non-fait): ")
         self.cars.append(Car(car_maker, car_model, car_year, car_color))
         self.jobs.append(Repair(job_name, job_cost, job_length, job_state))
@@ -46,47 +46,49 @@ class Billing:
     def remove_job(self):
         self.display()
         index = int(input("Entrez l'index: "))
-        return index-1
+        self.cars.pop(index-1)
+        self.jobs.pop(index-1)
+        Repair.job_data.pop(index-1)
 
     def show_hourly_income(self):
         print()
         income = 0
-        for i in range(0,len(Repair.job_data),3):
-            if Repair.job_data[i-1] == "fait":
-                job_value = Repair.job_data[i-3]/Repair.job_data[i-2]
+        for i in range(len(Repair.job_data)):
+            if Repair.job_data[i][3] == "fait":
+                job_value = Repair.job_data[i][1]/Repair.job_data[i][2]
                 income += job_value
         print(f"{income:.2f}$")
 
     def show_done_job_hours(self):
         print()
         hours = 0
-        for i in range(0,len(Repair.job_data),3):
-            if Repair.job_data[i-1] == "fait":
-                hours += Repair.job_data[i-2]
+        for i in range(len(Repair.job_data)):
+            if Repair.job_data[i][3] == "fait":
+                hours += Repair.job_data[i][2]
         print(f"{hours}h")
 
     def show_total_income(self):
         print()
         income = 0
-        for i in range(0,len(Repair.job_data),3):
-            if Repair.job_data[i-1] == "fait":
-                income += Repair.job_data[i-3]
+        for i in range(len(Repair.job_data)):
+            if Repair.job_data[i][3] == "fait":
+                income += Repair.job_data[i][1]
         print(f"{income}$")
 
     def show_pending_job_hours(self):
         print()
         hours = 0
-        for i in range(0,len(Repair.job_data),3):
-            if Repair.job_data[i-1] == "non-fait":
-                hours += Repair.job_data[i-2]
+        for i in range(len(Repair.job_data)):
+            if Repair.job_data[i][3] == "non-fait":
+                hours += Repair.job_data[i][2]
         print(f"{hours}h")
 
     def show_missed_total_income(self):
         print()
         income = 0
-        for i in range(0,len(Repair.job_data),3):
-            if Repair.job_data[i-1] == "non-fait":
-                income += Repair.job_data[i-3]
+        for i in range(len(Repair.job_data)):
+            if Repair.job_data[i][3] == "non-fait":
+                income += Repair.job_data[i][1]
         print(f"{income}$")        
 
     def display(self):
@@ -97,8 +99,6 @@ class Billing:
             i += 1   
 
     def menu(self):
-        print(Repair.job_data)
-        reboot = -1
         exit = False
         while not exit:
             user_sel = 0
@@ -124,8 +124,7 @@ class Billing:
                 if op_sel == 1:
                     self.add_job()
                 else: 
-                    reboot = self.remove_job()
-                    return reboot
+                    self.remove_job()
             elif user_sel == 2:
                 self.display()
             elif user_sel == 3:
@@ -139,8 +138,7 @@ class Billing:
             elif user_sel == 7:
                 self.show_missed_total_income()
             else:
-                break
-        return reboot
+                exit = True
 
 def execution():
     cars = []
@@ -158,13 +156,7 @@ def execution():
     jobs.append(Repair("Pneus",80,1,"fait"))
 
     bills = Billing(cars, jobs)
-    reboot = bills.menu()
-    while reboot != -1:
-        cars.pop(reboot)
-        jobs.pop(reboot)
-        Repair.job_data.pop(reboot)
-        bills = Billing(cars, jobs)
-        reboot = bills.menu()        
+    bills.menu()      
     print("\nBonne journée!")
 
 
