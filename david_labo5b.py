@@ -161,32 +161,3 @@ def execution():
 
 
 execution()
-
-
-        
-
-
-
-
-
-"""classe facturation(reparation)
-    méthodes
-        add_job
-        remove_job
-        get_done_jobs_length
-        get_done_jobs_cost
-        get_pay_rate
-        get_unfinished_jobs_length
-        get_unfinished_jobs_cost
-"""
-
-
-
-"""Définir une classe système de facturation et l'instancier avec les 5 informations 
-suivantes:
-    Nissan Altima 2012 Bleu, Freins 800$ 6h non-fait
-    Ford Taurus 2000 Vert, BieletteAv-G 200$ 4h fait
-    Honda Civic 2020 Noir, Pare-Brise 1200$ 2h non-fait
-    Ford Escape 2011 Gris, Démarreur 800$ 5h non-fait
-    Toyota Corolla 2002 Bleu, Installation de pneus 80$ 1h fait
-"""
