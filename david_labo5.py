@@ -1,3 +1,44 @@
+#Laboratoire 5:
+#Vous devez implémenter un système de facturation pour un garage automobile. Le système de facturation doit avoir la liste des véhicules et les 
+#réparations à faire.
+
+#Étape 1:
+#Créer le constructeur de la classe automobile. Votre automobile doit avoir les informations suivantes: Modèle, marque, année et couleur.
+
+#Étape 2 :
+#Définir une méthode permettant de retourner sous forme de string toutes les informations par rapport à l'automobile.
+
+#Étape 3:
+#Créer le constructeur de la classe réparations. Votre objet réparation contenir l'information par rapport au nom de la réparation, à son coût, 
+#au nombre d'heures de travail et si le travail a été fait ou non-fait.
+
+#Étape 4:
+#Définir une méthode permettant de retourner sous forme de string toutes les informations par rapport à la réparation.
+
+#Étape 5:
+#Définir une classe système de facturation et l'instancier avec les 5 informations suivantes:
+#Nissan Altima 2012 Bleu, Freins 800$ 6h non-fait
+#Ford Taurus 2000 Vert, BieletteAv-G 200$ 4h fait
+#Honda Civic 2020 Noir, Pare-Brise 1200$ 2h non-fait
+#Ford Escape 2011 Gris, Démarreur 800$ 5h non-fait
+#Toyota Corolla 2002 Bleu, Installation de pneus 80$ 1h fait
+
+#Étape 6:
+#Définir des méthodes permettant, d'ajouter des réparations, d'enlever des réparations, d'avoir le nombre total d'heures de réparations faites, 
+#le revenu total des réparations faites, le revenu horaire moyen, le nombre d'heures total de réparations non faites, et le revenu total manqué 
+#des réparations non faites.
+
+#Étape 7:
+#Définir un menu permettant à un utilisateur de choisir une des options suivantes:
+#ajouter ou enlever une réparation(en incluant les véhicules associés)
+#voir la liste de réparations(en incluant les véhicules associés)
+#revenue horaire moyen
+#voir le nombre total d'heures de réparations faites
+#voir le revenu total de réparation faites
+#voir le nombre d'heures total de réparations non-faites
+#voir le revenu total manqué des réparations non-faites.
+
+
 class Car:
 
     def __init__(self, maker:str, model:str, year:int, color:str):
@@ -18,6 +59,7 @@ class Repair:
         self.job_cost = job_cost
         self.job_length = job_length
         self.job_state = job_state
+        #Ajout d'une liste contenant les attributs de l'object Repair, à chaque instanciation, dans la variable de classe job_data
         Repair.job_data.append([job_name,job_cost,job_length,job_state])
 
     def __str__(self):
@@ -29,6 +71,7 @@ class Billing:
         self.cars = cars
         self.jobs = jobs
 
+    #Méthode ajoutant un nouvel objet Car et Repair dans leur liste respective (self.cars et self.jobs)
     def add_job(self):
         self.display()
         print()
@@ -43,6 +86,7 @@ class Billing:
         self.cars.append(Car(car_maker, car_model, car_year, car_color))
         self.jobs.append(Repair(job_name, job_cost, job_length, job_state))
 
+    #Méthode enlevant un objet Car et Repair dans leur liste respective
     def remove_job(self):
         self.display()
         index = int(input("Entrez l'index: "))
@@ -50,6 +94,7 @@ class Billing:
         self.jobs.pop(index-1)
         Repair.job_data.pop(index-1)
 
+    #Méthode affichant le revenu horaire moyen des réparations faites dans le système Billing 
     def show_hourly_income(self):
         print()
         income = 0
@@ -61,6 +106,7 @@ class Billing:
         hourly_income = income / hours
         print(f"{hourly_income:.2f}$")
 
+    #Méthode affichant le nombre d'heures total des réparations faites dans le système Billing
     def show_done_job_hours(self):
         print()
         hours = 0
@@ -69,6 +115,7 @@ class Billing:
                 hours += Repair.job_data[i][2]
         print(f"{hours}h")
 
+    #Méthode affichant le revenu total des réparations faites dans le système Billing
     def show_total_income(self):
         print()
         income = 0
@@ -77,6 +124,7 @@ class Billing:
                 income += Repair.job_data[i][1]
         print(f"{income}$")
 
+    #Méthode affichant le nombre d'heures total des réparations non-faites dans le système Billing
     def show_pending_job_hours(self):
         print()
         hours = 0
@@ -85,6 +133,7 @@ class Billing:
                 hours += Repair.job_data[i][2]
         print(f"{hours}h")
 
+    #Méthode affichant le revenu total jusqu'ici manqué des réparations non-faites dans le système Billing 
     def show_missed_total_income(self):
         print()
         income = 0
@@ -93,6 +142,7 @@ class Billing:
                 income += Repair.job_data[i][1]
         print(f"{income}$")        
 
+    #Méthode affichant une liste indexée (via la création d'un objet zip) contenant chaque réparation avec son véhicule associé
     def display(self):
         print()
         i = 1
@@ -100,6 +150,7 @@ class Billing:
             print(f"{i}. {car}: {job}")
             i += 1   
 
+    #Méthode présentant un menu à l'employé pour obtenir l'accès aux méthodes du système Billing 
     def menu(self):
         exit = False
         while not exit:
@@ -142,6 +193,7 @@ class Billing:
             else:
                 exit = True
 
+#Fonction contrôllant le flux du programme via l'instanciation des objets et l'appel éventuel de la méthode menu du système Billing
 def execution():
     cars = []
     cars.append(Car("Ford","Escape",2011,"Gris"))
@@ -162,4 +214,5 @@ def execution():
     print("\nBonne journée!")
 
 
+#Appel à la fonction execution pour démarrer le programme
 execution()
